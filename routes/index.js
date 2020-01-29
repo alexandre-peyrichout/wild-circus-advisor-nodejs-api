@@ -1,9 +1,9 @@
 const express = require("express");
 
-// const reason = require("./reason");
+const user = require("./user");
 
 const router = express.Router();
 
-// router.use("/reason", reason);
+router.use("/user", user);
 
 module.exports = router;
