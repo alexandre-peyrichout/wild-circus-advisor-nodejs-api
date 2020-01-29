@@ -26,13 +26,14 @@ router.post("/new", (req, res) => {
 });
 
 // Modify history
-router.put("/:id", (req, res) => {
-  const idUrl = req.params.id;
+router.put("/:user/:event", (req, res) => {
+  const user = req.params.user;
+  const event = req.params.event;
   const formData = req.body;
 
   connection.query(
-    "UPDATE history SET ? WHERE idhistory = ?",
-    [formData, idUrl],
+    "UPDATE history SET ? WHERE user_iduser = ? AND event_idevent = ?",
+    [formData, user, event],
     err => {
       if (err) {
         res.status(500).send(err);
