@@ -2,15 +2,36 @@ const express = require("express");
 const connection = require("../config");
 const router = express.Router({ mergeParams: true });
 
-// All history
-router.get("/", (req, res) => {
-  connection.query("SELECT * from history", (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+// All history for one circus
+router.get("/all/:id", (req, res) => {
+  const idUrl = req.params.id;
+  connection.query(
+    "SELECT history.* , event.city, event.date, circus.*, user.firstname, user.lastname FROM history JOIN event ON event.idevent = history.event_idevent JOIN circus ON circus.idcircus = event.circus_idcircus JOIN user ON user.iduser = history.user_iduser HAVING circus.idcircus = ? ",
+    [idUrl],
+    (err, results) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json(results);
+      }
     }
-  });
+  );
+});
+
+// All history for one user
+router.get("/:id", (req, res) => {
+  const idUrl = req.params.id;
+  connection.query(
+    "SELECT history.* , event.city, event.date, circus.image, circus.name FROM history JOIN event ON event.idevent = history.event_idevent JOIN circus ON circus.idcircus = event.circus_idcircus WHERE history.user_iduser = ?",
+    [idUrl],
+    (err, results) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
 });
 
 // Create a new history

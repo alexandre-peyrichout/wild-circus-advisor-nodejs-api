@@ -2,15 +2,30 @@ const express = require("express");
 const connection = require("../config");
 const router = express.Router({ mergeParams: true });
 
-// All event
-router.get("/", (req, res) => {
-  connection.query("SELECT * from event", (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+// // All event
+// router.get("/", (req, res) => {
+//   connection.query("SELECT * from event", (err, results) => {
+//     if (err) {
+//       res.status(500).send(err);
+//     } else {
+//       res.json(results);
+//     }
+//   });
+// });
+
+router.get("/:id", (req, res) => {
+  const idUrl = req.params.id;
+  connection.query(
+    "SELECT event.*, circus.name, circus.image FROM event JOIN circus ON circus.idcircus = event.circus_idcircus WHERE circus_idcircus = ?",
+    [idUrl],
+    (err, results) => {
+      if (err) {
+        res.status(500).send("Error");
+      } else {
+        res.json(results);
+      }
     }
-  });
+  );
 });
 
 // Create a new event

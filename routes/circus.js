@@ -4,13 +4,16 @@ const router = express.Router({ mergeParams: true });
 
 // All circus
 router.get("/", (req, res) => {
-  connection.query("SELECT * from circus", (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+  connection.query(
+    "SELECT circus.*, user.lastname, user.firstname FROM circus JOIN user ON circus.user_iduser = user.iduser",
+    (err, results) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json(results);
+      }
     }
-  });
+  );
 });
 
 // Create a new circus

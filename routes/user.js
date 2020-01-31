@@ -18,22 +18,6 @@ router.get("/", (req, res) => {
   });
 });
 
-// Select everything we need from one user
-router.get("/test", (req, res) => {
-  const { user } = req.query;
-  connection.query(
-    "SELECT * FROM task_has_destination JOIN destination ON destination.iddestination = task_has_destination.destination_iddestination JOIN task ON task.idtask = task_has_destination.task_idtask JOIN task_type ON task_type.idtask_type = task.task_type_idtask_type JOIN situation ON situation.idsituation = destination.situation_idsituation JOIN reason ON reason.idreason = destination.reason_idreason JOIN user ON user.iduser = destination.user_iduser JOIN country ON country.idcountry = destination.country_idcountry JOIN city ON city.idcity = destination.city_idcity WHERE user.iduser = ?",
-    user,
-    (err, results) => {
-      if (err) {
-        res.status(500).send("Error retrieving task_has_destination");
-      } else {
-        res.json(results);
-      }
-    }
-  );
-});
-
 // Route to select one user
 router.get("/:id", (req, res) => {
   const idUser = req.params.id;
