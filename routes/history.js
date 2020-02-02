@@ -18,11 +18,28 @@ router.get("/all/:id", (req, res) => {
   );
 });
 
+// All history for one circus
+router.get("/allnotes", (req, res) => {
+  const idUrl = req.params.id;
+  connection.query(
+    "SELECT AVG(history.note) as note, circus.idcircus FROM history JOIN circus ON circus.idcircus = history.event_idevent WHERE note != 'null' GROUP BY idcircus",
+    [idUrl],
+    (err, results) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+
 // All history for one user
 router.get("/:id", (req, res) => {
   const idUrl = req.params.id;
   connection.query(
-    "SELECT history.* , event.city, event.date, circus.image, circus.name FROM history JOIN event ON event.idevent = history.event_idevent JOIN circus ON circus.idcircus = event.circus_idcircus WHERE history.user_iduser = ?",
+    "SELECT history.* , event.city, event.date, circus.image, circus.name FROM history JOIN event ON event.idevent = history.event_idevent JOIN circus ON circus.idcircus = event.circus_idcircus WHERE history.user_iduser = ? ORDER BY history.idhistory DESC",
     [idUrl],
     (err, results) => {
       if (err) {
