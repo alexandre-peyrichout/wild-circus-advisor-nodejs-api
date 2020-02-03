@@ -6,7 +6,7 @@ const router = express.Router({ mergeParams: true });
 router.get("/all/:id", (req, res) => {
   const idUrl = req.params.id;
   connection.query(
-    "SELECT history.* , event.city, event.date, circus.*, user.firstname, user.lastname FROM history JOIN event ON event.idevent = history.event_idevent JOIN circus ON circus.idcircus = event.circus_idcircus JOIN user ON user.iduser = history.user_iduser HAVING circus.idcircus = ? ",
+    "SELECT history.* , event.city, event.date, circus.*, user.firstname, user.lastname FROM history JOIN event ON event.idevent = history.event_idevent JOIN circus ON circus.idcircus = event.circus_idcircus JOIN user ON user.iduser = history.user_iduser WHERE history.note != 'null' AND circus.idcircus = ? ORDER BY idhistory DESC",
     [idUrl],
     (err, results) => {
       if (err) {
