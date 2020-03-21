@@ -8,10 +8,6 @@ const api = require("./routes");
 const port = process.env.PORT || 3000;
 const app = express();
 
-// Support JSON-encoded bodies
-app.use(bodyParser.json());
-// Support URL-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // Headers
 app.use((req, res, next) => {
@@ -21,8 +17,21 @@ app.use((req, res, next) => {
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   res.header("Access-Control-Allow-Methods", "POST, PUT, DELETE, GET, OPTIONS");
-  next();
+  // intercept OPTIONS method
+  if ('OPTIONS' == req.method) {
+    res.send(200);
+  }
+  else {
+    next();
+  }
 });
+
+
+// Support JSON-encoded bodies
+app.use(bodyParser.json());
+// Support URL-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 app.use("/api", api);
 
